@@ -53,28 +53,31 @@
             // civil_status
             // 
             this.civil_status.FormattingEnabled = true;
-            this.civil_status.Location = new System.Drawing.Point(584, 9);
+            this.civil_status.Location = new System.Drawing.Point(584, 21);
             this.civil_status.Name = "civil_status";
             this.civil_status.Size = new System.Drawing.Size(171, 21);
             this.civil_status.TabIndex = 2;
+            this.civil_status.Text = "Select Civil Status";
             this.civil_status.SelectedIndexChanged += new System.EventHandler(this.civil_status_SelectedIndexChanged);
             // 
             // purok_cbox
             // 
             this.purok_cbox.FormattingEnabled = true;
-            this.purok_cbox.Location = new System.Drawing.Point(313, 9);
+            this.purok_cbox.Location = new System.Drawing.Point(313, 21);
             this.purok_cbox.Name = "purok_cbox";
             this.purok_cbox.Size = new System.Drawing.Size(171, 21);
             this.purok_cbox.TabIndex = 1;
+            this.purok_cbox.Text = "Select Purok Address";
             this.purok_cbox.SelectedIndexChanged += new System.EventHandler(this.purok_cbox_SelectedIndexChanged);
             // 
             // age_cbox
             // 
             this.age_cbox.FormattingEnabled = true;
-            this.age_cbox.Location = new System.Drawing.Point(61, 9);
+            this.age_cbox.Location = new System.Drawing.Point(61, 23);
             this.age_cbox.Name = "age_cbox";
             this.age_cbox.Size = new System.Drawing.Size(171, 21);
             this.age_cbox.TabIndex = 0;
+            this.age_cbox.Text = "Select Age Range";
             this.age_cbox.SelectedIndexChanged += new System.EventHandler(this.age_cbox_SelectedIndexChanged);
             // 
             // dataShow

@@ -36,6 +36,7 @@ namespace TRIMS
             purok_cbox.Width = comboBoxWidth;
             civil_status.Width = comboBoxWidth;
 
+
             age_cbox.Location = new Point(0, age_cbox.Location.Y);
             purok_cbox.Location = new Point(age_cbox.Right + spacing, purok_cbox.Location.Y);
             civil_status.Location = new Point(purok_cbox.Right + spacing, civil_status.Location.Y);
@@ -130,59 +131,58 @@ namespace TRIMS
             {
                 loadingForm.StartPosition = FormStartPosition.CenterScreen;
 
-                // Show loading form in another task to keep UI responsive
                 Task showLoadingTask = Task.Run(() => loadingForm.ShowDialog());
 
                 try
                 {
-                    string ageFilter = age_cbox.SelectedItem?.ToString();
+                    string ageLabel = age_cbox.SelectedItem?.ToString();
                     string purokFilter = purok_cbox.SelectedItem?.ToString();
                     string civilStatusFilter = civil_status.SelectedItem?.ToString();
 
-                    List<string> filters = new List<string>();
+                    List<DataRow> filteredRows = fullData.AsEnumerable().ToList();
 
-                    if (!string.IsNullOrEmpty(ageFilter))
-                        filters.Add($"AGE = '{ageFilter}'");
+                    if (!string.IsNullOrEmpty(ageLabel))
+                    {
+                        (double min, double max) = GetAgeRange(ageLabel);
+                        filteredRows = filteredRows.Where(row =>
+                        {
+                            string ageStr = row["AGE"].ToString();
+                            if (TryParseAge(ageStr, out double numericAge))
+                            {
+                                return numericAge >= min && numericAge <= max;
+                            }
+                            return false;
+                        }).ToList();
+                    }
 
                     if (!string.IsNullOrEmpty(purokFilter))
-                        filters.Add($"[ADDRESS2(PUROK)] = '{purokFilter}'");
+                    {
+                        filteredRows = filteredRows
+                            .Where(r => r["ADDRESS2(PUROK)"].ToString().Equals(purokFilter, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                    }
 
                     if (!string.IsNullOrEmpty(civilStatusFilter))
-                        filters.Add($"[CIVIL STATUS] = '{civilStatusFilter}'");
-
-                    string filterExpression = string.Join(" AND ", filters);
-
-                    DataView dv = new DataView(fullData);
-
-                    await Task.Run(() =>
                     {
-                        // Applying the filter may throw exceptions, so we use try-catch here
-                        try
-                        {
-                            dv.RowFilter = filterExpression;
-                        }
-                        catch (Exception ex)
-                        {
-                            // We cannot show MessageBox in background thread, so marshal it to UI thread:
-                            dataShow.Invoke(new Action(() =>
-                            {
-                                MessageBox.Show("Filter error: " + ex.Message);
-                            }));
-                        }
-                    });
+                        filteredRows = filteredRows
+                            .Where(r => r["CIVIL STATUS"].ToString().Equals(civilStatusFilter, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                    }
 
-                    // Update the data source on UI thread
+                    DataTable resultTable = filteredRows.Any() ? filteredRows.CopyToDataTable() : fullData.Clone();
+
+        
                     if (dataShow.InvokeRequired)
                     {
                         dataShow.Invoke(new Action(() =>
                         {
-                            dataShow.DataSource = dv;
+                            dataShow.DataSource = resultTable;
                             UpdateRowCountLabel();
                         }));
                     }
                     else
                     {
-                        dataShow.DataSource = dv;
+                        dataShow.DataSource = resultTable;
                         UpdateRowCountLabel();
                     }
                 }
@@ -193,11 +193,52 @@ namespace TRIMS
                     else
                         loadingForm.Close();
 
-                    // Wait for the loading form task to complete to avoid exceptions
                     await showLoadingTask;
                 }
             }
         }
+
+        private (double, double) GetAgeRange(string label)
+        {
+            switch (label.ToUpper())
+            {
+                case "INFANT": return (0.0, 1.0); // 0–12 months
+                case "TODDLER": return (1.0, 3.0);
+                case "PRESCHOOLER": return (3.0, 5.0);
+                case "CHILD": return (6.0, 12.0);
+                case "TEENAGER": return (13.0, 17.0);
+                case "YOUNG ADULT": return (18.0, 25.0);
+                case "ADULT": return (26.0, 39.0);
+                case "MIDDLE AGED": return (40.0, 59.0);
+                case "SENIOR": return (60.0, 150.0);
+                default: return (0, 150); // fallback
+            }
+        }
+
+
+        private bool TryParseAge(string ageStr, out double numericAge)
+        {
+            numericAge = 0;
+
+            if (string.IsNullOrWhiteSpace(ageStr))
+                return false;
+
+            ageStr = ageStr.Trim().ToLower();
+
+            if (ageStr.Contains("mo")) // e.g., "7 mos"
+            {
+                string numOnly = new string(ageStr.Where(char.IsDigit).ToArray());
+                if (double.TryParse(numOnly, out double months))
+                {
+                    numericAge = months / 12.0; // convert to years
+                    return true;
+                }
+            }
+
+            // Try parse as years
+            return double.TryParse(ageStr, out numericAge);
+        }
+
 
 
         private void LoadExcelData(string path)
@@ -280,6 +321,6 @@ namespace TRIMS
             TOTAL.Text = $"Total Data: {rowCount}";
         }
 
-       
+     
     }
 }

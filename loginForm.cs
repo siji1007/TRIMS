@@ -12,6 +12,10 @@ namespace TRIMS
             InitializeComponent();
             this.Resize += loginForm_Resize;
             mainForm = form;
+
+            // Attach KeyDown event handlers
+            txt_username.KeyDown += TxtFields_KeyDown;
+            txt_password.KeyDown += TxtFields_KeyDown;
         }
 
         private void loginForm_Resize(object sender, EventArgs e)
@@ -27,7 +31,7 @@ namespace TRIMS
 
         private void btn_login_Click(object sender, EventArgs e)
         {
-            if (txt_username.Text == "admin" && txt_password.Text == "admin")
+            if (txt_username.Text == "admin" && txt_password.Text == "mdrrmotalisay")
             {
                 mainForm.LoadDashboard();
             }
@@ -37,9 +41,19 @@ namespace TRIMS
             }
         }
 
+        // Trigger login when Enter is pressed in either textbox
+        private void TxtFields_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btn_login.PerformClick();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+              
+            }
+        }
+
         private void bottom_panel_Paint(object sender, PaintEventArgs e) { }
-        private void textBox1_TextChanged(object sender, EventArgs e) { }
-        private void txt_username_TextChanged(object sender, EventArgs e) { }
         private void loginForm_Load(object sender, EventArgs e) { }
     }
 }

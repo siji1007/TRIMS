@@ -140,9 +140,10 @@
             this.txt_password.ForeColor = System.Drawing.Color.Black;
             this.txt_password.Location = new System.Drawing.Point(106, 124);
             this.txt_password.Name = "txt_password";
+            this.txt_password.PasswordChar = '*';
             this.txt_password.Size = new System.Drawing.Size(230, 26);
             this.txt_password.TabIndex = 1;
-            this.txt_password.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+
             // 
             // txt_username
             // 
@@ -154,7 +155,7 @@
             this.txt_username.Name = "txt_username";
             this.txt_username.Size = new System.Drawing.Size(230, 26);
             this.txt_username.TabIndex = 0;
-            this.txt_username.TextChanged += new System.EventHandler(this.txt_username_TextChanged);
+  
             // 
             // contextMenuStrip1
             // 
