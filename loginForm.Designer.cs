@@ -143,7 +143,6 @@
             this.txt_password.PasswordChar = '*';
             this.txt_password.Size = new System.Drawing.Size(230, 26);
             this.txt_password.TabIndex = 1;
-
             // 
             // txt_username
             // 
@@ -155,7 +154,6 @@
             this.txt_username.Name = "txt_username";
             this.txt_username.Size = new System.Drawing.Size(230, 26);
             this.txt_username.TabIndex = 0;
-  
             // 
             // contextMenuStrip1
             // 
