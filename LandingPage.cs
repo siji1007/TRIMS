@@ -22,8 +22,8 @@ namespace TRIMS
         public void LoadDashboard()
         {
             panelMain.Controls.Clear();
-            dashboard dashboard = new dashboard(); 
-            dashboard.Dock = DockStyle.Fill;
+            UserControl1 dashboard = new UserControl1();
+            dashboard.Dock = DockStyle.Fill; // Makes it fill the parent panel
             panelMain.Controls.Add(dashboard);
         }
     }

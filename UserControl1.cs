@@ -15,6 +15,7 @@ namespace TRIMS
         public UserControl1()
         {
             InitializeComponent();
+            this.Dock = DockStyle.Fill; 
         }
 
         private void panel2_Paint(object sender, PaintEventArgs e)
@@ -26,5 +27,7 @@ namespace TRIMS
 		{
 
 		}
-	}
+
+      
+    }
 }

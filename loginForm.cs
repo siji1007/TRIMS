@@ -31,7 +31,7 @@ namespace TRIMS
 
         private void btn_login_Click(object sender, EventArgs e)
         {
-            if (txt_username.Text == "admin" && txt_password.Text == "mdrrmotalisay")
+            if (txt_username.Text == "a" && txt_password.Text == "a")
             {
                 mainForm.LoadDashboard();
             }
@@ -55,5 +55,10 @@ namespace TRIMS
 
         private void bottom_panel_Paint(object sender, PaintEventArgs e) { }
         private void loginForm_Load(object sender, EventArgs e) { }
+
+        private void txt_password_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
